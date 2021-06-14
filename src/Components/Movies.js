@@ -6,7 +6,8 @@ export default class Movies extends Component {
         super(props);
         this.state = {
             movies: getMovies(),
-            currentSearchText:''
+            currentSearchText:'',
+            filterMovies:getMovies(),
         }
     }
 
@@ -23,7 +24,25 @@ export default class Movies extends Component {
 
     handleChange = (e) =>{
         let val = e.target.value;
-        this.setState({currentSearchText:val});
+        if(val == '')
+        {
+            this.setState({
+                    filterMovies:this.state.movies
+                    ,currentSearchText:''
+                })
+                return;
+        }
+        let  filteredArr = this.state.movies.filter(movieObj=>{
+            let title = movieObj.title.trim().toLowerCase();
+            // console.log(title);
+            return title.includes(val.toLowerCase());
+        })
+
+        this.setState({
+            filterMovies:filteredArr,
+            currentSearchText:val
+        })
+        // this.setState({currentSearchText:val});
     }
     render() {
 
@@ -35,7 +54,7 @@ export default class Movies extends Component {
                     </div>
                     <div className="col-9">
                         <input onChange={this.handleChange} type='text'></input>
-                        <table class="table table-success table-striped">
+                        <table className="table table-success table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">Title</th>
@@ -47,8 +66,8 @@ export default class Movies extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    this.state.movies.map(moviesObj => (
-                                        <tr scope='row'>
+                                    this.state.filterMovies.map(moviesObj => (
+                                        <tr scope='row' key={moviesObj._id}>
                                             <td>{moviesObj.title}</td>
                                             <td>{moviesObj.genre.name}</td>
                                             <td>{moviesObj.numberInStock}</td>
