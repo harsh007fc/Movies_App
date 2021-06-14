@@ -7,7 +7,7 @@ export default class Movies extends Component {
         this.state = {
             movies: getMovies(),
             currentSearchText:'',
-            filterMovies:getMovies(),
+            // filterMovies:getMovies(),
         }
     }
 
@@ -24,28 +24,44 @@ export default class Movies extends Component {
 
     handleChange = (e) =>{
         let val = e.target.value;
-        if(val == '')
-        {
-            this.setState({
-                    filterMovies:this.state.movies
-                    ,currentSearchText:''
-                })
-                return;
-        }
-        let  filteredArr = this.state.movies.filter(movieObj=>{
-            let title = movieObj.title.trim().toLowerCase();
-            // console.log(title);
-            return title.includes(val.toLowerCase());
-        })
-
         this.setState({
-            filterMovies:filteredArr,
             currentSearchText:val
         })
+        // if(val == '')
+        // {
+        //     this.setState({
+        //             filterMovies:this.state.movies
+        //             ,currentSearchText:''
+        //         })
+        //         return;
+        // }
+        // let  filteredArr = this.state.movies.filter(movieObj=>{
+        //     let title = movieObj.title.trim().toLowerCase();
+        //     // console.log(title);
+        //     return title.includes(val.toLowerCase());
+        // })
+
+        // this.setState({
+        //     filterMovies:filteredArr,
+        //     currentSearchText:val
+        // })
         // this.setState({currentSearchText:val});
     }
     render() {
-
+        let {movies , currentSearchText} = this.state;
+        let filterMovies = [];
+        if(currentSearchText != '')
+        {
+            filterMovies = movies.filter(movieObj=>{
+                    let title = movieObj.title.trim().toLowerCase();
+                    // console.log(title);
+                    return title.includes(currentSearchText.toLowerCase());
+                })
+        }
+        else
+        {
+            filterMovies = movies;
+        }
         return (
             <div className="container">
                 <div className='row'>
@@ -66,7 +82,7 @@ export default class Movies extends Component {
                             </thead>
                             <tbody>
                                 {
-                                    this.state.filterMovies.map(moviesObj => (
+                                    filterMovies.map(moviesObj => (
                                         <tr scope='row' key={moviesObj._id}>
                                             <td>{moviesObj.title}</td>
                                             <td>{moviesObj.genre.name}</td>
