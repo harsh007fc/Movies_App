@@ -87,7 +87,7 @@ export default class Movies extends Component {
                     </div>
                     <div className='col-9'>
                         <input type='search' value={this.state.currSearchText} onChange={this.handleChange} ></input>
-                        <table className="table">
+                        <table className="table table-success table-striped">
                             <thead>
                                 <tr>
                                     <th scope="col">#</th>
@@ -118,7 +118,7 @@ export default class Movies extends Component {
                                                 <td>{movieObj.dailyRentalRate}</td>
                                                 <td><button onClick={()=>{
                                                     this.onDelete(movieObj._id)
-                                                }} type="button" className="btn btn-danger">Delete</button></td>
+                                                }} type="button" className="btn btn-outline-danger">Delete</button></td>
                                             </tr>
                                         )
                                     })
