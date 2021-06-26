@@ -25,6 +25,24 @@ export default class Movies extends Component {
         });
     }
 
+
+    sortByStock = (e) =>{
+        let className = e.target.className;
+        // console.log(className);
+        let sortedMovies = [];
+        if(className == 'fa fa-sort-asc')
+        {
+            sortedMovies = this.state.movies.sort(function(moviesObjA,moviesObjB){
+                return moviesObjA.numberInStock - moviesObjB.numberInStock;
+            });
+        }
+        else{
+            sortedMovies = this.state.movies.sort(function(moviesObjA,moviesObjB){
+                return moviesObjB.numberInStock - moviesObjA.numberInStock;
+            });
+        }
+        this.setState({movies:sortedMovies});
+    }
     sortByRatings = (e)=>{
         let className = e.target.className;
         // console.log(className);
@@ -76,14 +94,14 @@ export default class Movies extends Component {
                                     <th scope="col">Title</th>
                                     <th scope="col">Genre</th>
                                     <th scope="col">
-                                    <i   className="fa fa-sort-asc" aria-hidden="true"></i>
+                                    <i onClick={this.sortByStock} className="fa fa-sort-asc" aria-hidden="true"></i>
                                         Stock
-                                        <i className="fa fa-sort-desc" aria-hidden="true"></i>
+                                    <i onClick={this.sortByStock} className="fa fa-sort-desc" aria-hidden="true"></i>
                                         </th>
                                     <th scope="col">
                                     <i onClick={this.sortByRatings} className="fa fa-sort-asc" aria-hidden="true"></i>
                                         Rate
-                                        <i onClick={this.sortByRatings} className="fa fa-sort-desc" aria-hidden="true"></i>
+                                    <i onClick={this.sortByRatings} className="fa fa-sort-desc" aria-hidden="true"></i>
                                         </th>
                                     <th></th>
                                 </tr>
