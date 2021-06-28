@@ -5,7 +5,9 @@ export default class Movies extends Component {
         super();
         this.state = {
             movies: getMovies(),
-            currSearchText:''
+            currSearchText:'',
+            currPage:1,
+            limit:4,
         }
     }
     handleChange=(e)=>{
