@@ -146,7 +146,7 @@ export default class Movies extends Component {
                                         let classStyle = pageNumber == currPage?'page-item active':'page-item';
 
                                         return(
-                                            <li onClick ={()=>this.handlePageChange(pageNumber)} className={classStyle}><span className="page-link" >{pageNumber}</span></li>
+                                            <li key={pageNumber} onClick ={()=>this.handlePageChange(pageNumber)} className={classStyle}><span className="page-link" >{pageNumber}</span></li>
                                         )
                                     })
                                 }
