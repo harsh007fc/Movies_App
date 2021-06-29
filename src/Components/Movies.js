@@ -7,7 +7,7 @@ export default class Movies extends Component {
             movies: getMovies(),
             currSearchText:'',
             currPage:1,
-            limit:4,
+            // limit:4,
         }
     }
     handleChange=(e)=>{
@@ -63,9 +63,13 @@ export default class Movies extends Component {
         }
         this.setState({movies:sortedMovies})
     }
+    handlePageChange = (pageNumber)=>{
+        this.setState({currPage:pageNumber});
+    }
     render() {
         console.log('render');
-        let {movies,currSearchText} =this.state; //ES6 destructuring
+        let {movies,currSearchText,currPage} =this.state; //ES6 destructuring
+        let limit = 4;
         let filteredArr = [];
         if(currSearchText=='')
         {
@@ -79,6 +83,14 @@ export default class Movies extends Component {
                 return title.includes(currSearchText.toLowerCase());
             })
         }
+        let numberOfPage = Math.ceil(filteredArr.length / limit);
+        let pageNumberArr = [];
+        for(let i = 0; i < numberOfPage; i++ ){
+            pageNumberArr.push(i+1);
+        }
+        let si = (currPage - 1) * limit;
+        let ei = si + limit;// due to slice we didnt do -1 here
+        filteredArr = filteredArr.slice(si,ei);
        
         return (
             //JSX
@@ -127,9 +139,36 @@ export default class Movies extends Component {
                                 }
                             </tbody>
                         </table>
+                        <nav aria-label="...">
+                            <ul className="pagination">
+                                {
+                                    pageNumberArr.map((pageNumber)=>{
+                                        let classStyle = pageNumber == currPage?'page-item active':'page-item';
+
+                                        return(
+                                            <li onClick ={()=>this.handlePageChange(pageNumber)} className={classStyle}><span className="page-link" >{pageNumber}</span></li>
+                                        )
+                                    })
+                                }
+                                
+                                
+                            </ul>
+                        </nav>
                     </div>
                 </div>
             </div>
         )
     }
 }
+
+
+
+
+{/* <li className="page-item"><a class="page-link" href="#">1</a></li>
+                                <li className="page-item active">
+                                    <span className="page-link">
+                                        2
+                                        <span className="sr-only">(current)</span>
+                                    </span>
+                                </li>
+                                <li className="page-item"><a class="page-link" href="#">3</a></li> */}
