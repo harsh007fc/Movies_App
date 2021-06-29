@@ -1,14 +1,23 @@
 import React, { Component } from 'react'
 import { getMovies } from './getMovies';
+import axios from 'axios';
 export default class Movies extends Component {
     constructor() {
         super();
         this.state = {
-            movies: getMovies(),
+            movies:[],
             currSearchText:'',
             currPage:1,
             // limit:4,
         }
+    }
+    async componentDidMount(){
+        console.log("Component Did Mount");
+        let res = await axios.get('https://backend-react-movie.herokuapp.com/movies');
+        console.log(res.data.movies);
+        this.setState({
+            movies:res.data.movies
+        })
     }
     handleChange=(e)=>{
         let val = e.target.value;
@@ -91,9 +100,9 @@ export default class Movies extends Component {
         let si = (currPage - 1) * limit;
         let ei = si + limit;// due to slice we didnt do -1 here
         filteredArr = filteredArr.slice(si,ei);
-        if(filteredArr.length == 0){
-            this.setState({currPage:1});
-        }
+        // if(filteredArr.length == 0){
+        //     this.setState({currPage:1});
+        // }
        
         return (
             //JSX
