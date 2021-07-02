@@ -100,9 +100,9 @@ export default class Movies extends Component {
         let si = (currPage - 1) * limit;
         let ei = si + limit;// due to slice we didnt do -1 here
         filteredArr = filteredArr.slice(si,ei);
-        // if(filteredArr.length == 0){
-        //     this.setState({currPage:1});
-        // }
+        if(filteredArr.length == 0 &&  numberOfPage != 0){
+            this.setState({currPage:1});
+        }
        
         return (
             //JSX
