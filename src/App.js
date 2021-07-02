@@ -1,15 +1,18 @@
 import Movies from './Components/Movies'
 import About from './Components/About';
 import Home from './Components/Home';
+import Nav from './Components/Nav';
 import {BrowserRouter as Router,Route,Switch} from 'react-router-dom'
 function App() {
   return (
    <Router>
+     <Nav/>
     <Switch>   
       {/* this method is not prefferable */}
-   <Route path='/movies' component={Movies}/>
-   <Route path='/about' component={About}/>
-   <Route path='/' component={Home}/>
+      {/* in place of this we use exact keyword */}
+   <Route path='/' exact component={Home}/>
+   <Route path='/movies' exact component={Movies}/>
+   <Route path='/about' exact component={About}/>
    </Switch>
    </Router>
   );
