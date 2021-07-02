@@ -8,15 +8,19 @@ export default class Movies extends Component {
             movies:[],
             currSearchText:'',
             currPage:1,
-            // limit:4,
+            genres:[{_id:'abcd',name:'All Genres'}],
+            currentGenre:'All Genres',
         }
     }
     async componentDidMount(){
         console.log("Component Did Mount");
         let res = await axios.get('https://backend-react-movie.herokuapp.com/movies');
+        let genreRes = await axios.get('https://backend-react-movie.herokuapp.com/genres');
         console.log(res.data.movies);
+        console.log(genreRes.data.genres);
         this.setState({
-            movies:res.data.movies
+            movies:res.data.movies,
+            genres:[...this.state.genres,...genreRes.data.genres],
         })
     }
     handleChange=(e)=>{
@@ -75,9 +79,15 @@ export default class Movies extends Component {
     handlePageChange = (pageNumber)=>{
         this.setState({currPage:pageNumber});
     }
+
+    handleGenreChange = (genre) => {
+        this.setState({
+           currentGenre:genre 
+        })
+    }
     render() {
         console.log('render');
-        let {movies,currSearchText,currPage} =this.state; //ES6 destructuring
+        let {movies,currSearchText,currPage,genres,currentGenre} =this.state; //ES6 destructuring
         let limit = 4;
         let filteredArr = [];
         if(currSearchText=='')
@@ -106,69 +116,85 @@ export default class Movies extends Component {
        
         return (
             //JSX
-            <div className='container'>
-                <div className='row'>
-                    <div className='col-3'>
-                        Hello
+            <>
+                {this.state.movies.length == 0 ? <div class="d-flex justify-content-center">
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
                     </div>
-                    <div className='col-9'>
-                        <input type='search' value={this.state.currSearchText} onChange={this.handleChange} ></input>
-                        <table className="table table-success table-striped">
-                            <thead>
-                                <tr>
-                                    <th scope="col">#</th>
-                                    <th scope="col">Title</th>
-                                    <th scope="col">Genre</th>
-                                    <th scope="col">
+                </div>:<div div className = 'container' >
+            <div className='row'>
+                <div className='col-3'>
+                    <ul class="list-group">
+                       {
+                           genres.map((genre)=>(
+                               <li onClick={()=>this.handleGenreChange(genre.name)} key={genre._id} className='list-group-item'>
+                                   {genre.name}
+                               </li>
+                           ))
+                       }
+                    </ul>
+                    <h5>Current Genre : {currentGenre}</h5>
+                </div>
+                <div className='col-9'>
+                    <input type='search' value={this.state.currSearchText} onChange={this.handleChange} ></input>
+                    <table className="table table-success table-striped">
+                        <thead>
+                            <tr>
+                                <th scope="col">#</th>
+                                <th scope="col">Title</th>
+                                <th scope="col">Genre</th>
+                                <th scope="col">
                                     <i onClick={this.sortByStock} className="fa fa-sort-asc" aria-hidden="true"></i>
-                                        Stock
+                                    Stock
                                     <i onClick={this.sortByStock} className="fa fa-sort-desc" aria-hidden="true"></i>
-                                        </th>
-                                    <th scope="col">
+                                </th>
+                                <th scope="col">
                                     <i onClick={this.sortByRatings} className="fa fa-sort-asc" aria-hidden="true"></i>
-                                        Rate
+                                    Rate
                                     <i onClick={this.sortByRatings} className="fa fa-sort-desc" aria-hidden="true"></i>
-                                        </th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {
-                                    filteredArr.map((movieObj) => {
-                                        return (
-                                            <tr key={movieObj._id} >
-                                                <td></td>
-                                                <td>{movieObj.title}</td>
-                                                <td>{movieObj.genre.name}</td>
-                                                <td>{movieObj.numberInStock}</td>
-                                                <td>{movieObj.dailyRentalRate}</td>
-                                                <td><button onClick={()=>{
-                                                    this.onDelete(movieObj._id)
-                                                }} type="button" className="btn btn-outline-danger">Delete</button></td>
-                                            </tr>
-                                        )
-                                    })
-                                }
-                            </tbody>
-                        </table>
-                        <nav aria-label="...">
-                            <ul className="pagination">
-                                {
-                                    pageNumberArr.map((pageNumber)=>{
-                                        let classStyle = pageNumber == currPage?'page-item active':'page-item';
+                                </th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                filteredArr.map((movieObj) => {
+                                    return (
+                                        <tr key={movieObj._id} >
+                                            <td></td>
+                                            <td>{movieObj.title}</td>
+                                            <td>{movieObj.genre.name}</td>
+                                            <td>{movieObj.numberInStock}</td>
+                                            <td>{movieObj.dailyRentalRate}</td>
+                                            <td><button onClick={() => {
+                                                this.onDelete(movieObj._id)
+                                            }} type="button" className="btn btn-outline-danger">Delete</button></td>
+                                        </tr>
+                                    )
+                                })
+                            }
+                        </tbody>
+                    </table>
+                    <nav aria-label="...">
+                        <ul className="pagination">
+                            {
+                                pageNumberArr.map((pageNumber) => {
+                                    let classStyle = pageNumber == currPage ? 'page-item active' : 'page-item';
 
-                                        return(
-                                            <li key={pageNumber} onClick ={()=>this.handlePageChange(pageNumber)} className={classStyle}><span className="page-link" >{pageNumber}</span></li>
-                                        )
-                                    })
-                                }
-                                
-                                
-                            </ul>
-                        </nav>
-                    </div>
+                                    return (
+                                        <li key={pageNumber} onClick={() => this.handlePageChange(pageNumber)} className={classStyle}><span className="page-link" >{pageNumber}</span></li>
+                                    )
+                                })
+                            }
+
+
+                        </ul>
+                    </nav>
                 </div>
             </div>
+            </div>
+         }
+         </>
         )
     }
 }
@@ -184,3 +210,12 @@ export default class Movies extends Component {
                                     </span>
                                 </li>
                                 <li className="page-item"><a class="page-link" href="#">3</a></li> */}
+
+
+
+
+                                // <li className="list-group-item">An item</li>
+                                // <li className="list-group-item">A second item</li>
+                                // <li className="list-group-item">A third item</li>
+                                // <li className="list-group-item">A fourth item</li>
+                                // <li className="list-group-item">And a fifth one</li>
