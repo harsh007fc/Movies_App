@@ -7,6 +7,7 @@ function App() {
   return (
    <Router>
      <Nav/>
+     {/* router k and nav k bahr */}
     <Switch>   
       {/* this method is not prefferable */}
       {/* in place of this we use exact keyword */}
