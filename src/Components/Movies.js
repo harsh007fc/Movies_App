@@ -82,7 +82,7 @@ export default class Movies extends Component {
 
     handleGenreChange = (genre) => {
         this.setState({
-           currentGenre:genre 
+           currentGenre:genre  
         })
     }
     render() {
@@ -102,6 +102,13 @@ export default class Movies extends Component {
                 return title.includes(currSearchText.toLowerCase());
             })
         }
+        if(currentGenre != 'All Genres'){
+            filteredArr = filteredArr.filter((movieObj)=>{
+                return movieObj.genre.name == currentGenre
+            })
+        }
+
+
         let numberOfPage = Math.ceil(filteredArr.length / limit);
         let pageNumberArr = [];
         for(let i = 0; i < numberOfPage; i++ ){
@@ -124,7 +131,7 @@ export default class Movies extends Component {
                 </div>:<div div className = 'container' >
             <div className='row'>
                 <div className='col-3'>
-                    <ul class="list-group">
+                    <ul className="list-group">
                        {
                            genres.map((genre)=>(
                                <li onClick={()=>this.handleGenreChange(genre.name)} key={genre._id} className='list-group-item'>
